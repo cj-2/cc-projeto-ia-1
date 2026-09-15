@@ -10,7 +10,17 @@ def get_connection() -> sqlite3.Connection:
 
 
 def init_db() -> None:
-    # Garante que o arquivo/conexão SQLite existe. As tabelas específicas
-    # de cada feature são criadas na implementação da spec correspondente.
     conn = get_connection()
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS transacoes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            data TEXT NOT NULL,
+            descricao TEXT NOT NULL,
+            valor REAL NOT NULL,
+            tipo TEXT NOT NULL
+        )
+        """
+    )
+    conn.commit()
     conn.close()

@@ -66,7 +66,7 @@ specs/                 # spec de cada aula/feature
 
 ## Status da implementação
 
-- [ ] Aula 1 — Registrar e listar transações (`specs/aula-1-transacoes.md`)
+- [x] Aula 1 — Registrar e listar transações (`specs/aula-1-transacoes.md`)
 - [ ] Aula 2 — CRUD completo e validação (`specs/aula-2-crud-validacao.md`)
 - [ ] Aula 3 — Categorias (`specs/aula-3-categorias.md`)
 - [ ] Aula 4 — Saldo e resumo (`specs/aula-4-saldo-resumo.md`)
