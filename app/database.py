@@ -1,6 +1,7 @@
+import os
 import sqlite3
 
-DB_PATH = "gastos.db"
+DB_PATH = os.environ.get("DB_PATH", "gastos.db")
 
 
 def get_connection() -> sqlite3.Connection:

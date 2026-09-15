@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de Gastos — Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body {
+    font-family: system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    color: #1f2933;
+  }
+  h1 { font-size: 1.4rem; }
+  .saldo {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .cartao {
+    flex: 1;
+    border: 1px solid #d9dee3;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .cartao span { display: block; font-size: 0.85rem; color: #616e7c; }
+  .cartao strong { font-size: 1.3rem; }
+  .entradas strong { color: #12805c; }
+  .saidas strong { color: #b1040e; }
+  #mensagem-categoria { color: #616e7c; font-size: 0.9rem; }
+  canvas { max-width: 100%; }
+</style>
+</head>
+<body>
+  <h1>Controle de Gastos Pessoais</h1>
+
+  <div class="saldo">
+    <div class="cartao entradas"><span>Entradas</span><strong id="entradas">—</strong></div>
+    <div class="cartao saidas"><span>Saídas</span><strong id="saidas">—</strong></div>
+    <div class="cartao"><span>Saldo atual</span><strong id="saldo">—</strong></div>
+  </div>
+
+  <h2>Gastos por categoria (mês atual)</h2>
+  <p id="mensagem-categoria"></p>
+  <canvas id="grafico-categorias"></canvas>
+
+  <script>
+    function formatarMoeda(valor) {
+      return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    }
+
+    async function carregarSaldo() {
+      const resposta = await fetch("/saldo");
+      const dados = await resposta.json();
+      document.getElementById("entradas").textContent = formatarMoeda(dados.entradas);
+      document.getElementById("saidas").textContent = formatarMoeda(dados.saidas);
+      document.getElementById("saldo").textContent = formatarMoeda(dados.saldo);
+    }
+
+    async function carregarGraficoCategorias() {
+      const hoje = new Date();
+      const mes = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}`;
+      const resposta = await fetch(`/resumo?mes=${mes}`);
+      const dados = await resposta.json();
+
+      if (!dados.por_categoria || dados.por_categoria.length === 0) {
+        document.getElementById("mensagem-categoria").textContent =
+          "Nenhum gasto categorizado neste mês ainda.";
+        return;
+      }
+
+      const rotulos = dados.por_categoria.map((c) => c.categoria);
+      const valores = dados.por_categoria.map((c) => c.total);
+
+      new Chart(document.getElementById("grafico-categorias"), {
+        type: "bar",
+        data: {
+          labels: rotulos,
+          datasets: [{ label: "Gastos (R$)", data: valores, backgroundColor: "#b1040e" }],
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } },
+        },
+      });
+    }
+
+    carregarSaldo();
+    carregarGraficoCategorias();
+  </script>
+</body>
+</html>
