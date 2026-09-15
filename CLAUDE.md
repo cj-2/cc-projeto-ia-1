@@ -52,6 +52,12 @@ specs/                 # spec de cada aula/feature
 - **Campo `tipo`**: sempre `"entrada"` ou `"saida"` (sem outros valores).
 - **Erros de validação**: HTTP 422, corpo `{ "erro": "<mensagem clara>" }` (não usar o formato
   padrão `{"detail": [...]}` do FastAPI/Pydantic).
+- **`categoria_id` na transação**: opcional (nullable). Justificativa: transações das Aulas 1–2 já
+  existem sem categoria e precisam continuar válidas; além disso, o usuário pode querer lançar um
+  gasto rapidamente sem categorizar no ato.
+- **Filtro `GET /transacoes?categoria=<inexistente>`**: retorna lista vazia com HTTP 200, nunca 404.
+  Justificativa: `categoria` é um parâmetro de filtro sobre uma coleção, não um recurso acessado por
+  ID — uma consulta que não encontra resultados é um caso válido, não um erro.
 - **Banco de dados**: SQLite em arquivo local (`gastos.db`), criado na inicialização do servidor
   se não existir. Acesso via `sqlite3` (stdlib), sempre com **SQL parametrizado** — nunca
   concatenar valores diretamente na query.
@@ -59,16 +65,11 @@ specs/                 # spec de cada aula/feature
   modelos/schemas (`app/models.py`), acesso a dados (`app/database.py`).
 - **Git**: um commit por aula/feature implementada.
 
-## Decisões em aberto (a resolver e registrar aqui quando implementadas)
-
-- `categoria_id` na transação: obrigatório ou opcional? (Aula 3)
-- `GET /transacoes?categoria=` com categoria inexistente: retorna lista vazia ou 404? (Aula 3)
-
 ## Status da implementação
 
 - [x] Aula 1 — Registrar e listar transações (`specs/aula-1-transacoes.md`)
-- [ ] Aula 2 — CRUD completo e validação (`specs/aula-2-crud-validacao.md`)
-- [ ] Aula 3 — Categorias (`specs/aula-3-categorias.md`)
+- [x] Aula 2 — CRUD completo e validação (`specs/aula-2-crud-validacao.md`)
+- [x] Aula 3 — Categorias (`specs/aula-3-categorias.md`)
 - [ ] Aula 4 — Saldo e resumo (`specs/aula-4-saldo-resumo.md`)
 - [ ] Aula 5 — Filtros e testes (`specs/aula-5-filtros-testes.md`)
 - [ ] Aula 6 — Export e dashboard (`specs/aula-6-export-dashboard-deploy.md`)
