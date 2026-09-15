@@ -1,0 +1,74 @@
+# Controle de Gastos Pessoais
+
+## Descrição do projeto
+
+API REST para controle de gastos pessoais: permite registrar transações financeiras (entradas e
+saídas), consultá-las, categorizá-las e obter resumos/saldos. Projeto construído de forma
+incremental, uma feature por "aula" (ver `specs/`).
+
+## Stack
+
+- Python 3.11+
+- FastAPI
+- SQLite (acesso via `sqlite3`, módulo padrão do Python — sem ORM)
+- Pydantic (schemas de request/response)
+
+## Como rodar
+
+```bash
+python -m venv venv
+venv\Scripts\activate        # Windows
+source venv/bin/activate     # Linux/Mac
+
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+A API sobe em `http://127.0.0.1:8000`; documentação interativa em `/docs`.
+
+O banco SQLite (`gastos.db`) é criado automaticamente na raiz do projeto na inicialização do
+servidor, caso não exista.
+
+## Estrutura de pastas
+
+```
+app/
+├── __init__.py
+├── main.py          # instância do FastAPI, startup (init_db) e registro dos routers
+├── database.py      # get_connection() e init_db() — acesso ao SQLite
+├── models.py         # schemas Pydantic (request/response)
+└── routes/
+    └── ...            # routers da API, um módulo por recurso
+requirements.txt
+CLAUDE.md
+docs/                  # roteiro de prompts do curso
+specs/                 # spec de cada aula/feature
+```
+
+## Convenções do projeto
+
+- **Datas**: sempre no formato ISO `YYYY-MM-DD`.
+- **Valores monetários**: sempre com 2 casas decimais.
+- **Campo `tipo`**: sempre `"entrada"` ou `"saida"` (sem outros valores).
+- **Erros de validação**: HTTP 422, corpo `{ "erro": "<mensagem clara>" }` (não usar o formato
+  padrão `{"detail": [...]}` do FastAPI/Pydantic).
+- **Banco de dados**: SQLite em arquivo local (`gastos.db`), criado na inicialização do servidor
+  se não existir. Acesso via `sqlite3` (stdlib), sempre com **SQL parametrizado** — nunca
+  concatenar valores diretamente na query.
+- **Organização do código**: separado em módulos por responsabilidade — rotas (`app/routes/`),
+  modelos/schemas (`app/models.py`), acesso a dados (`app/database.py`).
+- **Git**: um commit por aula/feature implementada.
+
+## Decisões em aberto (a resolver e registrar aqui quando implementadas)
+
+- `categoria_id` na transação: obrigatório ou opcional? (Aula 3)
+- `GET /transacoes?categoria=` com categoria inexistente: retorna lista vazia ou 404? (Aula 3)
+
+## Status da implementação
+
+- [ ] Aula 1 — Registrar e listar transações (`specs/aula-1-transacoes.md`)
+- [ ] Aula 2 — CRUD completo e validação (`specs/aula-2-crud-validacao.md`)
+- [ ] Aula 3 — Categorias (`specs/aula-3-categorias.md`)
+- [ ] Aula 4 — Saldo e resumo (`specs/aula-4-saldo-resumo.md`)
+- [ ] Aula 5 — Filtros e testes (`specs/aula-5-filtros-testes.md`)
+- [ ] Aula 6 — Export e dashboard (`specs/aula-6-export-dashboard-deploy.md`)
