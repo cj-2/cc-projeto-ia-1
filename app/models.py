@@ -44,3 +44,22 @@ class CategoriaCreate(BaseModel):
 class Categoria(BaseModel):
     id: int
     nome: str
+
+
+class Saldo(BaseModel):
+    entradas: float
+    saidas: float
+    saldo: float
+
+
+class CategoriaTotal(BaseModel):
+    categoria: str
+    total: float
+
+
+class ResumoMensal(BaseModel):
+    mes: str
+    entradas: float
+    saidas: float
+    saldo: float
+    por_categoria: list[CategoriaTotal]

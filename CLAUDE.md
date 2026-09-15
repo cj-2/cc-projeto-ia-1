@@ -63,13 +63,17 @@ specs/                 # spec de cada aula/feature
   concatenar valores diretamente na query.
 - **Organização do código**: separado em módulos por responsabilidade — rotas (`app/routes/`),
   modelos/schemas (`app/models.py`), acesso a dados (`app/database.py`).
-- **Git**: um commit por aula/feature implementada.
+- **Git**: meta de um commit por aula/feature implementada, mas o commit nunca é automático —
+  peça confirmação do usuário antes de criar cada commit, mesmo ao final de uma spec.
+- **Progresso das aulas**: sempre que todos os critérios de aceite estipulados na spec de uma aula
+  forem verificados e passarem, marcar o item correspondente como concluído (`[x]`) em "Status da
+  implementação" abaixo.
 
 ## Status da implementação
 
 - [x] Aula 1 — Registrar e listar transações (`specs/aula-1-transacoes.md`)
 - [x] Aula 2 — CRUD completo e validação (`specs/aula-2-crud-validacao.md`)
 - [x] Aula 3 — Categorias (`specs/aula-3-categorias.md`)
-- [ ] Aula 4 — Saldo e resumo (`specs/aula-4-saldo-resumo.md`)
+- [x] Aula 4 — Saldo e resumo (`specs/aula-4-saldo-resumo.md`)
 - [ ] Aula 5 — Filtros e testes (`specs/aula-5-filtros-testes.md`)
 - [ ] Aula 6 — Export e dashboard (`specs/aula-6-export-dashboard-deploy.md`)
